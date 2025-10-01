@@ -1,4 +1,6 @@
-import { Insert, Remove, createElement } from "../foundation/utils.js";
+import { Insert, Remove } from "@openscd/oscd-api"
+
+import { createElement } from "../foundation/utils.js";
 import { getReference } from "../tBaseElement/getReference.js";
 
 export type ChangeGseOrSmvAddressOptions = {

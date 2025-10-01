@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import { Insert, Remove } from "../foundation/utils.js"
+import { Insert, Remove } from "@openscd/oscd-api"
 
 import { docWithComplexMmxuTarget, newMmxuLNodeTypeWithChanges } from "./updateLNodeType.testfiles.js";
 

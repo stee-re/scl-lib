@@ -11,7 +11,7 @@ describe("matchSrcAttributes", () => {
         srcLNInst="1" 
         srcCBName="gse" 
         serviceType="GOOSE" />`;
-  const extRef = findElement(extRefStr, "ExtRef")!;
+  const extRef = findElement(extRefStr, "ExtRef")! as Element;
 
   const ldInstStr = `<LDevice inst="ldInst" />`;
   const ln0Str = `<LN0 lnClass="LLN0" inst="1" />`;
@@ -20,11 +20,11 @@ describe("matchSrcAttributes", () => {
   const smvStr = `<SampledValueControl name="smv" />`;
   const rpStr = `<ReportControl name="rp" />`;
   const LDevice = findElement(ldInstStr, "LDevice")!;
-  const ln0 = findElement(ln0Str, "LN0")!;
-  const ln = findElement(lnStr, "LN")!;
-  const gse = findElement(gseStr, "GSEControl")!;
-  const smv = findElement(smvStr, "SampledValueControl")!;
-  const rp = findElement(rpStr, "ReportControl")!;
+  const ln0 = findElement(ln0Str, "LN0")! as Element;
+  const ln = findElement(lnStr, "LN")! as Element;
+  const gse = findElement(gseStr, "GSEControl")! as Element;
+  const smv = findElement(smvStr, "SampledValueControl")! as Element;
+  const rp = findElement(rpStr, "ReportControl")! as Element;
 
   it("return false with orphan control block", () =>
     expect(matchSrcAttributes(extRef, gse)).to.equal(false));
@@ -80,7 +80,7 @@ describe("matchSrcAttributes", () => {
   });
 
   it("it uses ldInst when srcLDInst is undefined", () => {
-    extRef.removeAttribute("srcLDInst", "");
+    extRef.removeAttribute("srcLDInst");
     extRef.setAttribute("ldInst", "ldInst");
 
     LDevice.appendChild(ln0);

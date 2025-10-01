@@ -5,7 +5,10 @@ import {
   withSubscriptionSupervision,
 } from "./unsubscribe.testfiles.js";
 
-import { Remove, Update, isRemove, isUpdate } from "../foundation/utils.js";
+import { Remove } from "@openscd/oscd-api";
+import { isRemove } from "@openscd/oscd-api/utils.js";
+
+import { Update, isUpdate } from "../foundation/utils.js";
 import { unsubscribe } from "./unsubscribe.js";
 import { findElement } from "../foundation/helpers.test.js";
 
@@ -56,7 +59,7 @@ describe("Function allowing to unsubscribe multiple external references", () => 
   });
 
   it("does not remove ICT defined Ed2 attributes", () => {
-    const extRef = findElement(laterBindingExtRefs, "ExtRef")!;
+    const extRef = findElement(laterBindingExtRefs, "ExtRef")! as Element;
     const edits = unsubscribe([extRef]);
 
     expect(edits.length).to.equal(1);
@@ -71,7 +74,7 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     const extRef = findElement(
       laterBindingExtRefs,
       'ExtRef[intAddr="someOtherIntAddr"]',
-    )!;
+    )! as Element;
     const edits = unsubscribe([extRef]);
 
     expect(edits.length).to.equal(1);
@@ -107,7 +110,7 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     expect(edits[2]).to.satisfies(isUpdate);
     expect((edits[2] as Update).element).to.equal(extRefs[2]);
     expect(edits[3]).to.satisfies(isRemove);
-    expect((edits[3] as Remove).node).to.equal(val.firstChild);
+    expect((edits[3] as Remove).node).to.equal(val!.firstChild);
     expect(edits[4]).to.satisfies(isRemove);
     expect((edits[4] as Remove).node).to.equal(ln);
   });
@@ -132,7 +135,7 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     const extRef = findElement(
       withSubscriptionSupervision,
       'ExtRef[srcCBName="someGse"]',
-    )!;
+    )! as Element;
     const edits = unsubscribe([extRef]);
 
     expect(edits.length).to.equal(1);
@@ -144,7 +147,7 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     const extRef = findElement(
       withSubscriptionSupervision,
       'ExtRef[srcCBName="someGse3"]',
-    )!;
+    )! as Element;
     const edits = unsubscribe([extRef]);
 
     expect(edits.length).to.equal(1);

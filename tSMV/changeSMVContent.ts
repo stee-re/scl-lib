@@ -1,4 +1,5 @@
-import { Insert, Remove } from "../foundation/utils.js";
+import { Insert, Remove } from "@openscd/oscd-api";
+
 import {
   ChangeGseOrSmvAddressOptions,
   changeGseOrSmvAddress,

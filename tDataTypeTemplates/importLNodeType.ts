@@ -1,4 +1,6 @@
-import { Edit, Insert, createElement } from "../foundation/utils.js";
+import { Insert } from "@openscd/oscd-api";
+
+import { Edit, createElement } from "../foundation/utils.js";
 
 import { getReference } from "../tBaseElement/getReference.js";
 import { isEqualNode } from "./foundation.js";

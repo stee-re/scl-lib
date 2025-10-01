@@ -1,6 +1,9 @@
 import { expect } from "chai";
 
-import { Insert, Update, isInsert, isUpdate } from "../foundation/utils.js";
+import { Insert } from "@openscd/oscd-api";
+import { isInsert } from "@openscd/oscd-api/utils.js";
+
+import { Update, isUpdate } from "../foundation/utils.js";
 
 import { subscriptionEd2, subscriptionEd1 } from "./subscribe.testfiles.js";
 import { subscribe } from "./subscribe.js";
@@ -64,6 +67,7 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
       const edits = subscribe([{ sink, source: { fcda, controlBlock } }], {
         force: true,
         ignoreSupervision: true,
+        checkOnlyBType: false,
       });
       expect(edits.length).to.equal(1);
     });
@@ -317,6 +321,7 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
         const edits = subscribe([{ sink, source: { fcda, controlBlock } }], {
           force: false,
           ignoreSupervision: true,
+          checkOnlyBType: false,
         });
         expect(edits.length).to.equal(2);
         expect(edits[0]).to.satisfies(isInsert);
@@ -363,6 +368,7 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
         const edits = subscribe([extRef3, extRef4], {
           force: false,
           ignoreSupervision: true,
+          checkOnlyBType: false,
         });
         expect(edits.length).to.equal(3);
         expect(edits[0]).to.satisfies(isInsert);
@@ -484,6 +490,7 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
         const edits = subscribe([extRefEdit1], {
           force: false,
           ignoreSupervision: false,
+          checkOnlyBType: false,
         });
         expect(edits.length).to.equal(2);
       });
@@ -506,6 +513,7 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
         const edits = subscribe([extRefEdit1], {
           force: false,
           ignoreSupervision: true,
+          checkOnlyBType: false,
         });
         expect(edits.length).to.equal(1);
       });

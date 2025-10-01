@@ -1,4 +1,6 @@
-import { Insert, createElement } from "../foundation/utils.js";
+import { Insert } from "@openscd/oscd-api";
+
+import { createElement } from "../foundation/utils.js";
 import { getReference } from "../tBaseElement/getReference.js";
 
 import { connectedAp } from "../tControlWithIEDName/connctedAp.js";

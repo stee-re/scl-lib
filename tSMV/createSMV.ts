@@ -1,4 +1,6 @@
-import { Insert, createElement } from "../foundation/utils.js";
+import { Insert } from "@openscd/oscd-api";
+
+import { createElement } from "../foundation/utils.js";
 import { macAddressGenerator } from "../generator/macAddressGenerator.js";
 import { appIdGenerator } from "../generator/appIdGenerator.js";
 import { getReference } from "../tBaseElement/getReference.js";

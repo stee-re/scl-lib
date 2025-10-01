@@ -1,4 +1,6 @@
-import { Remove, Update } from "../foundation/utils.js";
+import { Remove } from "@openscd/oscd-api";
+
+import { Update } from "../foundation/utils.js";
 
 import { controlBlocks } from "../tControl/controlBlocks.js";
 import { fCDAsSubscription } from "../tFCDA/removeFCDA.js";

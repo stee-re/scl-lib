@@ -1,4 +1,7 @@
-import { Insert, Update, isInsert, isUpdate } from "../../foundation/utils";
+import { Insert } from "@openscd/oscd-api";
+import { isInsert } from "@openscd/oscd-api/utils.js";
+
+import { Update, isUpdate } from "../../foundation/utils.js";
 
 import {
   ExtRefSource,

@@ -1,4 +1,4 @@
-import { crossProduct } from "../foundation/utils";
+import { crossProduct } from "../foundation/utils.js";
 
 /**
  * Locates control block from an ExtRef element.

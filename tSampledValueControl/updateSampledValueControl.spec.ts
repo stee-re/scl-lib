@@ -1,11 +1,10 @@
 import { expect } from "chai";
 
+import { Insert, Remove } from "@openscd/oscd-api";
+import { isInsert, isRemove } from "@openscd/oscd-api/utils.js";
+
 import {
-  Insert,
-  Remove,
   Update,
-  isInsert,
-  isRemove,
   isUpdate,
 } from "../foundation/utils.js";
 

@@ -2,12 +2,11 @@
  * Basis is a copy from www.github.com/openenergytools/oscd-template-generator
  * originally written by ca-d, thx Chris. Code has been modified!
  */
+import { Insert } from "@openscd/oscd-api";
+
 import { LNodeDescription, nsdToJson } from "./nsdToJson.js";
-
-import { createElement, Insert, TreeSelection } from "../foundation/utils.js";
-
+import { createElement, TreeSelection } from "../foundation/utils.js";
 import { getReference } from "../tBaseElement/getReference.js";
-
 import { hashElement } from "./foundation.js";
 
 type Templates = {

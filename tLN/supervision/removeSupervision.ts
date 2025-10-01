@@ -1,4 +1,4 @@
-import { Remove } from "../../foundation/utils.js";
+import { Remove } from "@openscd/oscd-api";
 import { isSrcRefEditable } from "./foundation.js";
 
 export type removeSupervisionOptions = {

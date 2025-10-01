@@ -1,8 +1,10 @@
+import { Remove } from "@openscd/oscd-api";
+
 import { isPublic } from "../tBaseElement/isPublic.js";
 import { unsubscribe } from "../tExtRef/unsubscribe.js";
 import { removeSubscriptionSupervision } from "../tLN/removeSubscriptionSupervision.js";
 
-import type { Remove, Update } from "../foundation/utils.js";
+import type { Update } from "../foundation/utils.js";
 
 const elementsToRemove = ["Association", "ClientLN", "ConnectedAP", "KDC"];
 

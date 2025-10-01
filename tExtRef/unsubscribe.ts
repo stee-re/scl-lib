@@ -1,4 +1,6 @@
-import { Remove, Update } from "../foundation/utils.js";
+import { Remove } from "@openscd/oscd-api";
+
+import { Update } from "../foundation/utils.js";
 
 import { removeInputs } from "../tInputs/removeInputs.js";
 import { removeSubscriptionSupervision } from "../tLN/removeSubscriptionSupervision.js";

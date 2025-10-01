@@ -1,4 +1,4 @@
-import { Remove } from "../foundation/utils.js";
+import { Remove } from "@openscd/oscd-api";
 
 function isInputLeaf(input: Element, allInputs: Element[]): boolean {
   let sameInputs = 0;

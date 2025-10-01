@@ -1,6 +1,7 @@
 import { expect } from "chai";
+import { Insert } from "@openscd/oscd-api";
 
-import { Insert, isInsert, isRemove } from "../foundation/utils.js";
+import { isInsert, isRemove } from "@openscd/oscd-api/utils.js";
 
 import { importLNodeType } from "./importLNodeType.js";
 import {

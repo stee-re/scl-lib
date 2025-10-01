@@ -1,4 +1,4 @@
-import { crossProduct } from "../foundation/utils";
+import { crossProduct } from "../foundation/utils.js";
 
 /**
  * Looks up Communication section GSE or SMV addresses based on the control block

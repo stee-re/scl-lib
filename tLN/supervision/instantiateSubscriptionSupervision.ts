@@ -1,4 +1,4 @@
-import { Insert } from "../../foundation/utils";
+import { Insert } from "@openscd/oscd-api";
 
 import {
   Supervision,

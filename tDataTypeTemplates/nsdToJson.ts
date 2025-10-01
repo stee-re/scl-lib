@@ -101,6 +101,7 @@ type CdcDescription = {
   isArray?: string;
   sizeAttribute?: string;
   children: CdcChildren;
+  typeKindParameterized?: string
 };
 
 export type LNodeDescription = Record<string, CdcDescription>;
@@ -584,7 +585,7 @@ export function nsdToJson(
     });
 
     const typeKindParameterized = dataObject.getAttribute(
-      "typeKindParemeterized",
+      "typeKindParameterized",
     );
 
     getDataAttributes(dataObject).forEach((dataAttribute) => {
@@ -624,6 +625,7 @@ export function nsdToJson(
     if (deprecated) data["deprecated"] = deprecated;
     if (isArray) data["isArray"] = isArray;
     if (sizeAttribute) data["sizeAttribute"] = sizeAttribute;
+    if (typeKindParameterized) data["typeKindParameterized"] = typeKindParameterized;
 
     return data;
   }

@@ -1,4 +1,6 @@
-import { Insert, Update, createElement } from "../foundation/utils.js";
+import { Insert } from "@openscd/oscd-api";
+
+import { Update, createElement } from "../foundation/utils.js";
 import { getReference } from "../tBaseElement/getReference.js";
 import { insertSubscriptionSupervisions } from "../tLN/supervision/insertSubscriptionSupervisions.js";
 
@@ -270,10 +272,10 @@ export function subscribe(
   const validConnections = options.force
     ? connections
     : (connections.filter((conn) =>
-        validSubscribeConditions(conn, {
-          checkOnlyBType: options.checkOnlyBType,
-        }),
-      ) as Connection[]);
+      validSubscribeConditions(conn, {
+        checkOnlyBType: options.checkOnlyBType,
+      }),
+    ) as Connection[]);
 
   const extRefEdits = createSubscribeEdits(validConnections);
 

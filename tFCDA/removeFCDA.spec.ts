@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import { Update, isRemove, isUpdate } from "../foundation/utils.js";
+import { isRemove } from "@openscd/oscd-api/utils.js";
+import { Update, isUpdate } from "../foundation/utils.js";
 
 import { findElement } from "../foundation/helpers.test.js";
 

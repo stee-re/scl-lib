@@ -1,8 +1,10 @@
 import { expect } from "chai";
 
+import { Insert, Remove } from "@openscd/oscd-api";
+import { isInsert, isRemove } from "@openscd/oscd-api/utils.js";
+
 import { findElement } from "../foundation/helpers.test.js";
 
-import { Insert, Remove, isInsert, isRemove } from "../foundation/utils.js";
 import {
   nulledSMV,
   partlyInstType,
@@ -50,7 +52,7 @@ const content6 = {
 
 function testPTypeChange(
   gSE: Element,
-  key: string,
+  key: keyof typeof conv,
   value: string | undefined,
 ): void {
   const oldAddress = gSE.querySelector("Address");

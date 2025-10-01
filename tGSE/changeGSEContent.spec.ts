@@ -1,5 +1,8 @@
 import { expect } from "chai";
 
+import { Insert, Remove } from "@openscd/oscd-api";
+import { isInsert, isRemove } from "@openscd/oscd-api/utils.js";
+
 import { findElement } from "../foundation/helpers.test.js";
 
 import {
@@ -9,7 +12,6 @@ import {
   woInstType,
 } from "./changeGSEContent.testfiles.js";
 import { changeGSEContent } from "./changeGSEContent.js";
-import { Insert, Remove, isInsert, isRemove } from "../foundation/utils.js";
 
 const conv = {
   mac: "MAC-Address",
@@ -82,7 +84,7 @@ function testPTypeChange(
   expect((edits[0] as Insert).parent).to.equal(gSE);
   expect(
     ((edits[0] as Insert).node as Element).querySelector(
-      `Address > P[type="${conv[key]}"]`,
+      `Address > P[type="${conv[key as keyof typeof conv]}"]`,
     )?.textContent ?? null,
   ).to.equal(value ?? null);
   // eslint-disable-next-line no-unused-expressions

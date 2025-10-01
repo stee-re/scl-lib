@@ -1,4 +1,6 @@
-import { Remove, Update } from "../foundation/utils.js";
+import { Remove } from "@openscd/oscd-api";
+
+import { Update } from "../foundation/utils.js";
 
 import { removeDataSet } from "../tDataSet/removeDataSet.js";
 import { unsubscribe } from "../tExtRef/unsubscribe.js";

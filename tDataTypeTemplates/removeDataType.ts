@@ -1,4 +1,4 @@
-import { Remove } from "../foundation/utils.js";
+import { Remove } from "@openscd/oscd-api";
 
 export type RemoveDataTypeOptions = {
   /** Whether a linked data type will be removed */
@@ -20,7 +20,7 @@ function removeOrphans(orphans: Element[]): void {
   orphans.forEach((orphan) => orphan.remove());
 }
 
-function isLNodeTypeReferenced(lNodeType:Element):boolean {
+function isLNodeTypeReferenced(lNodeType: Element): boolean {
   const dtt = lNodeType.closest("DataTypeTemplates");
 
   const id = lNodeType.getAttribute("id");
@@ -48,13 +48,13 @@ function getOrphans(ddt: Element, saveOrphans: Element[] = []): Element[] {
     .filter((orphan) => !saveOrphans.includes(orphan));
 }
 
-function clonedDataType(dtt:Element,dataType:Element):Element {
+function clonedDataType(dtt: Element, dataType: Element): Element {
 
   return dtt.querySelector(`:scope > *[id="${dataType.getAttribute('id')}"]`)!;
 
 }
 
-function isDataTypeLinked(dataType:Element): boolean {
+function isDataTypeLinked(dataType: Element): boolean {
   if (dataType.tagName === 'LNodeType') return isLNodeTypeReferenced(dataType);
 
   return isDataTypeReferenced(dataType);
@@ -81,7 +81,7 @@ export function removeDataType(
   const saveOrphans = getOrphans(dttClone);
 
   const removes: Remove[] = [];
-  let orphans = [clonedDataType(dttClone,dataType)];
+  let orphans = [clonedDataType(dttClone, dataType)];
   while (orphans.length > 0) {
     removes.push(...orphanRemoves(dtt!, orphans));
     removeOrphans(orphans);

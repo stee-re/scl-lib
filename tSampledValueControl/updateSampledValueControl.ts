@@ -1,4 +1,6 @@
-import { Insert, Remove, Update } from "../foundation/utils.js";
+import { Insert, Remove } from "@openscd/oscd-api";
+
+import { Update } from "../foundation/utils.js";
 
 import { controlBlockGseOrSmv } from "../tControl/controlBlockGseOrSmv.js";
 import { controlBlockObjRef } from "../tControl/controlBlockObjRef.js";

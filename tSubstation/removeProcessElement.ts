@@ -1,4 +1,4 @@
-import { Remove } from "../foundation/utils.js";
+import { Remove } from "@openscd/oscd-api";
 
 function isBusBasCNode(cNode: Element): boolean {
   return cNode.parentElement?.children.length === 1;

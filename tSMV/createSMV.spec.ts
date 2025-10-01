@@ -1,6 +1,7 @@
 import { expect } from "chai";
 
-import { Insert, isInsert } from "../foundation/utils.js";
+import { Insert } from "@openscd/oscd-api";
+import { isInsert } from "@openscd/oscd-api/utils.js";
 
 import { createSMV } from "./createSMV.js";
 

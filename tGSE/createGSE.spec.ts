@@ -1,6 +1,10 @@
 import { expect } from "chai";
+
+import { Insert } from "@openscd/oscd-api";
+import { isInsert } from "@openscd/oscd-api/utils.js";
+
 import { createGSE } from "./createGSE.js";
-import { Insert, isInsert } from "../foundation/utils.js";
+
 
 const parent = new DOMParser()
   .parseFromString(
