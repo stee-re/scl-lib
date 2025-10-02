@@ -1,4 +1,4 @@
-import { Update } from "../foundation/utils.js";
+import { SetAttributes } from "@openscd/oscd-api";
 
 function updateSourceRef(
   element: Element,
@@ -13,14 +13,14 @@ function updateSourceRef(
     oldBay: string;
     newBay: string;
   },
-): Update[] {
+): SetAttributes[] {
   const sourceRefs = Array.from(
     element.ownerDocument.querySelectorAll(
       'Private[type="eIEC61850-6-100"]>LNodeInputs>SourceRef',
     ),
   );
 
-  const updates: Update[] = [];
+  const setAttributes: SetAttributes[] = [];
 
   sourceRefs.forEach((srcRef) => {
     const source = srcRef.getAttribute("source");
@@ -31,13 +31,13 @@ function updateSourceRef(
     if (!source.startsWith(oldPath)) return;
 
     const newPath = `${oldSubstation}/${oldVoltageLevel}/${newBay}`;
-    updates.push({
+    setAttributes.push({
       element: srcRef,
       attributes: { source: source.replace(oldPath, newPath) },
     });
   });
 
-  return updates.filter((update) => update) as Update[];
+  return setAttributes.filter((update) => update) as SetAttributes[];
 }
 
 function updateConnectivityNodes(
@@ -51,10 +51,10 @@ function updateConnectivityNodes(
     voltageLevel: string;
     bayName: string;
   },
-): Update[] {
+): SetAttributes[] {
   const cNodes = Array.from(element.getElementsByTagName("ConnectivityNode"));
 
-  const updates: Update[] = [];
+  const updates: SetAttributes[] = [];
 
   cNodes.forEach((cNode) => {
     const cNodeName = cNode.getAttribute("name");
@@ -78,7 +78,7 @@ function updateConnectivityNodes(
     );
   });
 
-  return updates.filter((update) => update) as Update[];
+  return updates.filter((update) => update) as SetAttributes[];
 }
 
 function updateTerminals(
@@ -92,7 +92,7 @@ function updateTerminals(
     connectivityNode: string;
     bayName: string;
   },
-): Update[] {
+): SetAttributes[] {
   const terminals = Array.from(
     element.closest("Substation")!.querySelectorAll(
       `Terminal[connectivityNode="${oldConnectivityNode}"],
@@ -100,7 +100,7 @@ function updateTerminals(
     ),
   );
 
-  const updates = terminals.map((terminal) => ({
+  const setAttributes = terminals.map((terminal) => ({
     element: terminal,
     attributes: {
       connectivityNode,
@@ -108,19 +108,19 @@ function updateTerminals(
     },
   }));
 
-  return updates;
+  return setAttributes;
 }
 
 /** Updates `Bay` attributes and cross-referenced elements
- * @param update - update edit on `Bay` attributes
+ * @param setAttributes - setAttributes edit on `Bay` attributes
  * @returns Completed update edit array */
-export function updateBay(update: Update): Update[] {
-  if (update.element.tagName !== "Bay") return [update];
+export function updateBay(setAttributes: SetAttributes): SetAttributes[] {
+  if (setAttributes.element.tagName !== "Bay") return [setAttributes];
 
-  const bay = update.element;
-  const attributes = update.attributes;
+  const bay = setAttributes.element;
+  const attributes = setAttributes.attributes;
 
-  if (!attributes.name) return [update];
+  if (!attributes || !attributes.name) return [setAttributes];
 
   const oldName = bay.getAttribute("name");
   const substationName = bay.closest("Substation")?.getAttribute("name");
@@ -128,9 +128,9 @@ export function updateBay(update: Update): Update[] {
 
   const newName = attributes.name;
   if (!substationName || !voltageLevelName || !oldName || oldName === newName)
-    return [update];
+    return [setAttributes];
 
-  return [update].concat(
+  return [setAttributes].concat(
     ...updateConnectivityNodes(bay, {
       substation: substationName,
       voltageLevel: voltageLevelName,

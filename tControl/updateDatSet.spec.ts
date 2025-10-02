@@ -1,6 +1,8 @@
 import { expect } from "chai";
+
+import { isSetAttributes } from "@openscd/oscd-api/utils.js";
+
 import { updateDatSet } from "./updateDatSet.js";
-import { Update, isUpdate } from "../foundation/utils.js";
 
 const ied = new DOMParser()
   .parseFromString(`<IED name="IED" /> `, "application/xml")
@@ -77,9 +79,9 @@ describe("Utility function updating tControl datSet attribute", () => {
     const attributes = { datSet: "newDataSetName" };
     const update = updateDatSet({ element, attributes });
 
-    expect(update).to.satisfy(isUpdate);
-    expect((update as Update).element.tagName).to.equal("DataSet");
-    expect((update as Update).attributes).to.deep.equal({
+    expect(update).to.satisfy(isSetAttributes);
+    expect(update!.element.tagName).to.equal("DataSet");
+    expect(update!.attributes).to.deep.equal({
       name: "newDataSetName",
     });
   });

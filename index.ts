@@ -1,6 +1,4 @@
 export {
-  Edit,
-  Update,
   TreeSelection,
 } from "./foundation/utils.js";
 

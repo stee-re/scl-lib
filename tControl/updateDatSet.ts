@@ -1,10 +1,14 @@
-import { Update } from "../foundation/utils.js";
+import { SetAttributes } from "@openscd/oscd-api";
 
 const controlBlockTags = ["ReportControl", "GSEControl", "SampledValueControl"];
 
-export function updateDatSet(update: Update): Update | null {
-  const newDatSet = update.attributes.datSet;
-  const controlBlock = update.element;
+/** 
+ * On update the `datSet` attribute of a given control block this function will change
+ * `DataSet.name` attribute as well if the `DataSet` is only used by this control block.
+ */
+export function updateDatSet(setAttributes: SetAttributes): SetAttributes | null {
+  const newDatSet = setAttributes?.attributes?.datSet;
+  const controlBlock = setAttributes.element;
   const oldDatSet = controlBlock.getAttribute("datSet");
 
   if (!newDatSet || !controlBlockTags.includes(controlBlock.tagName))
@@ -20,7 +24,7 @@ export function updateDatSet(update: Update): Update | null {
     ).length === 1;
   if (!isDataSetUsedByThisElementOnly) return null;
 
-  const dataSet = update.element.parentElement?.querySelector(
+  const dataSet = setAttributes.element.parentElement?.querySelector(
     `DataSet[name="${oldDatSet}"]`,
   );
   if (!dataSet) return null;

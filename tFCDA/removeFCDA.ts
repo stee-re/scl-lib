@@ -1,6 +1,6 @@
 import { Remove } from "@openscd/oscd-api";
 
-import { Update } from "../foundation/utils.js";
+import { SetAttributes } from "@openscd/oscd-api";
 
 import { controlBlocks } from "../tControl/controlBlocks.js";
 import { matchDataAttributes } from "../tExtRef/matchDataAttributes.js";
@@ -42,14 +42,14 @@ export function fCDAsSubscription(fcda: Element): Element[] {
  * subscription that need to be updated or removed as well.
  * @param remove - remove edit (remove.node must be FCDA)
  * @returns Edit array removing FCDA and its subscriber information */
-export function removeFCDA(remove: Remove): (Update | Remove)[] {
+export function removeFCDA(remove: Remove): (SetAttributes | Remove)[] {
   if ((remove.node as Element).tagName !== "FCDA") return [];
 
   const fcda = remove.node as Element;
 
-  const removeActionFcda: (Remove | Update)[] = [remove];
+  const removeActionFcda: (Remove | SetAttributes)[] = [remove];
 
-  const extRefActions: (Remove | Update)[] = [];
+  const extRefActions: (Remove | SetAttributes)[] = [];
   extRefActions.push(...unsubscribe(fCDAsSubscription(fcda)));
 
   return removeActionFcda.concat(extRefActions);

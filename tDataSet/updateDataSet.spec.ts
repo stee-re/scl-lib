@@ -33,7 +33,7 @@ describe("Utility function for DataSet element", () => {
     expect(updateDataSet(update)).to.deep.equal([]);
   });
 
-  it("returns only Update edit for DataSet when name is missing", () => {
+  it("returns only SetAttributes edit for DataSet when name is missing", () => {
     const dataSet = findElement(validDataSet, "DataSet");
     const update = { element: dataSet, attributes: { desc: "someDesc" } };
 

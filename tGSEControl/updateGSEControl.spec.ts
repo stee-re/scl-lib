@@ -1,12 +1,7 @@
 import { expect } from "chai";
 
-import { Insert, Remove } from "@openscd/oscd-api";
-import { isInsert, isRemove } from "@openscd/oscd-api/utils.js";
-
-import {
-  Update,
-  isUpdate,
-} from "../foundation/utils.js";
+import { Insert, Remove, SetAttributes } from "@openscd/oscd-api";
+import { isInsert, isRemove, isSetAttributes } from "@openscd/oscd-api/utils.js";
 
 import { gseControlDoc } from "./gsecontrol.testfiles.js";
 
@@ -56,7 +51,7 @@ function buildAttr(
 }
 
 describe("Utility function to update GSEControl attributes", () => {
-  it("returns empty array when update.element is not GSEControl update", () => {
+  it("returns empty array when setAttributes.element is not GSEControl update", () => {
     const ied = findElement(gseControlDoc, ":root > IED")!;
     const actions = updateGSEControl({
       element: ied,
@@ -78,9 +73,9 @@ describe("Utility function to update GSEControl attributes", () => {
       });
 
       expect(actions.length).to.equal(2);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(gseControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(gseControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         name: "someNewGseName",
         desc: "someDesc",
         type: "GSSE",
@@ -89,9 +84,9 @@ describe("Utility function to update GSEControl attributes", () => {
         securityEnabled: "someSecEna",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("ExtRef");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("ExtRef");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         srcCBName: "someNewGseName",
       });
     });
@@ -107,9 +102,9 @@ describe("Utility function to update GSEControl attributes", () => {
       });
 
       expect(actions.length).to.equal(5);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(gseControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(gseControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         name: "someNewGseName",
         desc: "someDesc",
         type: "GSSE",
@@ -118,14 +113,14 @@ describe("Utility function to update GSEControl attributes", () => {
         securityEnabled: "someSecEna",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("ExtRef");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("ExtRef");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         srcCBName: "someNewGseName",
       });
-      expect(actions[2]).to.satisfy(isUpdate);
-      expect((actions[2] as Update).element.tagName).to.equal("ExtRef");
-      expect((actions[2] as Update).attributes).to.deep.equal({
+      expect(actions[2]).to.satisfy(isSetAttributes);
+      expect((actions[2] as SetAttributes).element.tagName).to.equal("ExtRef");
+      expect((actions[2] as SetAttributes).attributes).to.deep.equal({
         srcCBName: "someNewGseName",
       });
 
@@ -155,9 +150,9 @@ describe("Utility function to update GSEControl attributes", () => {
       });
 
       expect(actions.length).to.equal(5);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(gseControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(gseControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         name: "someNewGseName",
         desc: "someDesc",
         type: "GSSE",
@@ -166,9 +161,9 @@ describe("Utility function to update GSEControl attributes", () => {
         securityEnabled: "someSecEna",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("ExtRef");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("ExtRef");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         srcCBName: "someNewGseName",
       });
 
@@ -186,9 +181,9 @@ describe("Utility function to update GSEControl attributes", () => {
         "srcIEDsomeLDInst/LLN0.someNewGseName",
       );
 
-      expect(actions[4]).to.satisfy(isUpdate);
-      expect((actions[4] as Update).element.tagName).to.equal("GSE");
-      expect((actions[4] as Update).attributes).to.deep.equal({
+      expect(actions[4]).to.satisfy(isSetAttributes);
+      expect((actions[4] as SetAttributes).element.tagName).to.equal("GSE");
+      expect((actions[4] as SetAttributes).attributes).to.deep.equal({
         cbName: "someNewGseName",
       });
     });
@@ -206,9 +201,9 @@ describe("Utility function to update GSEControl attributes", () => {
       });
 
       expect(actions.length).to.equal(2);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(gseControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(gseControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         datSet: "someNewDatSet",
         desc: "someDesc",
         type: "GSSE",
@@ -218,9 +213,9 @@ describe("Utility function to update GSEControl attributes", () => {
         confRev: "30001",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("DataSet");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("DataSet");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         name: "someNewDatSet",
       });
     });
@@ -236,9 +231,9 @@ describe("Utility function to update GSEControl attributes", () => {
       });
 
       expect(actions.length).to.equal(1);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(gseControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(gseControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         desc: "someDesc",
         type: "GSSE",
         appID: "someNewAppID",
@@ -259,9 +254,9 @@ describe("Utility function to update GSEControl attributes", () => {
       });
 
       expect(actions.length).to.equal(2);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(gseControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(gseControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         datSet: "someNewDatSet",
         confRev: "30001",
       });

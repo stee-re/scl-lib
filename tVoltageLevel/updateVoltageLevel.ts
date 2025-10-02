@@ -1,4 +1,4 @@
-import { Update } from "../foundation/utils.js";
+import { SetAttributes } from "@openscd/oscd-api";
 
 function updateSourceRef(
   element: Element,
@@ -11,14 +11,14 @@ function updateSourceRef(
     oldVoltageLevel: string;
     newVoltageLevel: string;
   },
-): Update[] {
+): SetAttributes[] {
   const sourceRefs = Array.from(
     element.ownerDocument.querySelectorAll(
       'Private[type="eIEC61850-6-100"]>LNodeInputs>SourceRef',
     ),
   );
 
-  const updates: Update[] = [];
+  const updates: SetAttributes[] = [];
 
   sourceRefs.forEach((srcRef) => {
     const source = srcRef.getAttribute("source");
@@ -35,7 +35,7 @@ function updateSourceRef(
     });
   });
 
-  return updates.filter((update) => update) as Update[];
+  return updates.filter((update) => update) as SetAttributes[];
 }
 
 function updateConnectivityNodes(
@@ -47,10 +47,10 @@ function updateConnectivityNodes(
     substation: string;
     voltageLevelName: string;
   },
-): Update[] {
+): SetAttributes[] {
   const cNodes = Array.from(element.getElementsByTagName("ConnectivityNode"));
 
-  const updates: Update[] = [];
+  const updates: SetAttributes[] = [];
 
   cNodes.forEach((cNode) => {
     const cNodeName = cNode.getAttribute("name");
@@ -88,7 +88,7 @@ function updateTerminals(
     connectivityNode: string;
     voltageLevelName: string;
   },
-): Update[] {
+): SetAttributes[] {
   const terminals = Array.from(
     element.closest("Substation")!.querySelectorAll(
       `Terminal[connectivityNode="${oldConnectivityNode}"],
@@ -110,15 +110,15 @@ function updateTerminals(
 }
 
 /** Updates `VoltageLevel` attributes and cross-referenced elements
- * @param update - update edit on `VoltageLevel` attributes
+ * @param setAttributes - update edit on `VoltageLevel` attributes
  * @returns Completed update edit array */
-export function updateVoltageLevel(update: Update): Update[] {
-  if (update.element.tagName !== "VoltageLevel") return [update];
+export function updateVoltageLevel(setAttributes: SetAttributes): SetAttributes[] {
+  if (setAttributes.element.tagName !== "VoltageLevel") return [setAttributes];
 
-  const voltageLevel = update.element;
-  const attributes = update.attributes;
+  const voltageLevel = setAttributes.element;
+  const attributes = setAttributes.attributes;
 
-  if (!attributes.name) return [update];
+  if (!attributes?.name) return [setAttributes];
 
   const oldName = voltageLevel.getAttribute("name");
   const substationName = voltageLevel
@@ -126,9 +126,9 @@ export function updateVoltageLevel(update: Update): Update[] {
     ?.getAttribute("name");
 
   const newName = attributes.name;
-  if (!substationName || !oldName || oldName === newName) return [update];
+  if (!substationName || !oldName || oldName === newName) return [setAttributes];
 
-  return [update].concat(
+  return [setAttributes].concat(
     ...updateConnectivityNodes(voltageLevel, {
       substation: substationName,
       voltageLevelName: newName,

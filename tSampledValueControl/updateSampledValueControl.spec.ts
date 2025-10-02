@@ -1,12 +1,7 @@
 import { expect } from "chai";
 
-import { Insert, Remove } from "@openscd/oscd-api";
-import { isInsert, isRemove } from "@openscd/oscd-api/utils.js";
-
-import {
-  Update,
-  isUpdate,
-} from "../foundation/utils.js";
+import { Insert, Remove, SetAttributes } from "@openscd/oscd-api";
+import { isInsert, isRemove, isSetAttributes } from "@openscd/oscd-api/utils.js";
 
 import { smvControlDoc } from "./smvcontrol.testfiles.js";
 
@@ -77,9 +72,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
       });
 
       expect(actions.length).to.equal(2);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(smvControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(smvControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         name: "someNewSmvName",
         desc: "someDesc",
         multicast: "true",
@@ -88,9 +83,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
         nofASDU: "2",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("ExtRef");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("ExtRef");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         srcCBName: "someNewSmvName",
       });
     });
@@ -106,9 +101,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
       });
 
       expect(actions.length).to.equal(4);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(smvControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(smvControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         name: "someNewSmvName",
         desc: "someDesc",
         multicast: "true",
@@ -117,9 +112,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
         smvID: "someSmvID",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("ExtRef");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("ExtRef");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         srcCBName: "someNewSmvName",
       });
 
@@ -149,9 +144,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
       });
 
       expect(actions.length).to.equal(2);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(smvControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(smvControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         name: "someNewSmvName",
         desc: "someDesc",
         multicast: "true",
@@ -160,9 +155,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
         smvID: "someSmvID",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("SMV");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("SMV");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         cbName: "someNewSmvName",
       });
     });
@@ -180,9 +175,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
       });
 
       expect(actions.length).to.equal(2);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(smvControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(smvControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         desc: "someDesc",
         datSet: "someNewDatSet",
         smvID: "someSmvID",
@@ -192,9 +187,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
         multicast: "false",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("DataSet");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("DataSet");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         name: "someNewDatSet",
       });
     });
@@ -210,9 +205,9 @@ describe("Utility function to update SampledValueControl attributes", () => {
       });
 
       expect(actions.length).to.equal(1);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(smvControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(smvControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         desc: "someDesc",
         confRev: "10001",
         smpRate: "70",
@@ -233,16 +228,16 @@ describe("Utility function to update SampledValueControl attributes", () => {
       });
 
       expect(actions.length).to.equal(2);
-      expect(actions[0]).to.satisfy(isUpdate);
-      expect((actions[0] as Update).element).to.equal(smvControl);
-      expect((actions[0] as Update).attributes).to.deep.equal({
+      expect(actions[0]).to.satisfy(isSetAttributes);
+      expect((actions[0] as SetAttributes).element).to.equal(smvControl);
+      expect((actions[0] as SetAttributes).attributes).to.deep.equal({
         datSet: "someNewDatSet",
         confRev: "30001",
       });
 
-      expect(actions[1]).to.satisfy(isUpdate);
-      expect((actions[1] as Update).element.tagName).to.equal("DataSet");
-      expect((actions[1] as Update).attributes).to.deep.equal({
+      expect(actions[1]).to.satisfy(isSetAttributes);
+      expect((actions[1] as SetAttributes).element.tagName).to.equal("DataSet");
+      expect((actions[1] as SetAttributes).attributes).to.deep.equal({
         name: "someNewDatSet",
       });
     });

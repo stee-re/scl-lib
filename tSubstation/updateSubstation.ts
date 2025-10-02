@@ -1,4 +1,4 @@
-import { Update } from "../foundation/utils.js";
+import { SetAttributes } from "@openscd/oscd-api";
 
 function updateSourceRef(
   element: Element,
@@ -9,14 +9,14 @@ function updateSourceRef(
     oldSubstation: string;
     newSubstation: string;
   },
-): Update[] {
+): SetAttributes[] {
   const sourceRefs = Array.from(
     element.ownerDocument.querySelectorAll(
       'Private[type="eIEC61850-6-100"]>LNodeInputs>SourceRef',
     ),
   );
 
-  const updates: Update[] = [];
+  const updates: SetAttributes[] = [];
 
   sourceRefs.forEach((srcRef) => {
     const source = srcRef.getAttribute("source");
@@ -33,18 +33,18 @@ function updateSourceRef(
     });
   });
 
-  return updates.filter((update) => update) as Update[];
+  return updates.filter((update) => update) as SetAttributes[];
 }
 
 function updateConnectivityNodes(
   substation: Element,
   substationName: string,
-): Update[] {
+): SetAttributes[] {
   const cNodes = Array.from(
     substation.getElementsByTagName("ConnectivityNode"),
   );
 
-  const updates = [] as Update[];
+  const updates = [] as SetAttributes[];
 
   cNodes.forEach((cNode) => {
     const cNodeName = cNode.getAttribute("name");
@@ -71,7 +71,7 @@ function updateConnectivityNodes(
     );
   });
 
-  return updates.filter((update) => update) as Update[];
+  return updates.filter((update) => update) as SetAttributes[];
 }
 
 function updateTerminals(
@@ -85,7 +85,7 @@ function updateTerminals(
     connectivityNode: string;
     substationName: string;
   },
-): Update[] {
+): SetAttributes[] {
   const terminals = Array.from(
     element.closest("Substation")!.querySelectorAll(
       `Terminal[connectivityNode="${oldConnectivityNode}"],
@@ -107,13 +107,13 @@ function updateTerminals(
 /** Updates `Substation` attributes and cross-referenced elements
  * @param update - update edit on `Substation` attributes
  * @returns Completed update edit array */
-export function updateSubstation(update: Update): Update[] {
+export function updateSubstation(update: SetAttributes): SetAttributes[] {
   if (update.element.tagName !== "Substation") return [update];
 
   const substation = update.element;
   const attributes = update.attributes;
 
-  if (!attributes.name) return [update];
+  if (!attributes?.name) return [update];
 
   const oldName = substation.getAttribute("name");
   const newName = attributes.name;

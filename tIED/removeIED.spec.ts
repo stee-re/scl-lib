@@ -1,19 +1,20 @@
 import { expect } from "chai";
 
-import { handleEdit, isRemove, isUpdate } from "@openscd/open-scd-core";
+import { EditV2 } from "@openscd/oscd-api";
+import { isRemove, isUpdate } from "@openscd/oscd-api/utils.js";
 
-import { Edit } from "../foundation/utils.js";
+import { handleEdit } from "../foundation/helpers.test.js";
 
 import { scl } from "./removeIED.testfile.js";
 
 import { removeIED } from "./removeIED.js";
 
-function numberRemoves(edits: Edit[], tag: string): number {
+function numberRemoves(edits: EditV2[], tag: string): number {
   return edits.filter((edit) => isRemove(edit) && edit.node.nodeName === tag)
     .length;
 }
 
-function numberUpdates(edits: Edit[], tag: string): number {
+function numberUpdates(edits: EditV2[], tag: string): number {
   return edits.filter((edit) => isUpdate(edit) && edit.element.nodeName === tag)
     .length;
 }

@@ -1,6 +1,4 @@
-import { Insert, Remove } from "@openscd/oscd-api";
-
-import { Update } from "../foundation/utils.js";
+import { Insert, Remove, SetAttributes } from "@openscd/oscd-api";
 
 import { controlBlockGseOrSmv } from "../tControl/controlBlockGseOrSmv.js";
 import { controlBlockObjRef } from "../tControl/controlBlockObjRef.js";
@@ -17,36 +15,36 @@ import { updateDatSet } from "../tControl/updateDatSet.js";
  *
  * >NOTE: confRev attribute is updated +10000 on each data set change
  * ```
- * @param update - diff holding the `SampledValueControl` as element
+ * @param setAttributes - diff holding the `SampledValueControl` as element
  * @returns action array to update all `SampledValueControl` attributes
  */
 export function updateSampledValueControl(
-  update: Update,
-): (Update | Remove | Insert)[] {
-  if (update.element.tagName !== "SampledValueControl") return [];
+  setAttributes: SetAttributes,
+): (SetAttributes | Remove | Insert)[] {
+  if (setAttributes.element.tagName !== "SampledValueControl") return [];
 
-  const updates: (Update | Remove | Insert)[] = [];
-  if (update.attributes.name) {
-    const extRefUpdates: Update[] = findControlBlockSubscription(
-      update.element,
+  const updates: (SetAttributes | Remove | Insert)[] = [];
+  if (setAttributes.attributes?.name) {
+    const extRefUpdates: SetAttributes[] = findControlBlockSubscription(
+      setAttributes.element,
     ).map((extRef) => ({
       element: extRef,
-      attributes: { srcCBName: update.attributes.name },
+      attributes: { srcCBName: setAttributes.attributes!.name },
     }));
 
     const supervisionUpdates: (Remove | Insert)[] = Array.from(
-      update.element.ownerDocument.querySelectorAll(
+      setAttributes.element.ownerDocument.querySelectorAll(
         ':root > IED > AccessPoint > Server > LDevice > LN[lnClass="LSVS"] > DOI[name="SvCBRef"] > DAI[name="setSrcRef"] > Val',
       ),
     )
-      .filter((val) => val.textContent === controlBlockObjRef(update.element))
+      .filter((val) => val.textContent === controlBlockObjRef(setAttributes.element))
       .flatMap((val) => {
-        const [path] = controlBlockObjRef(update.element)!.split(".");
+        const [path] = controlBlockObjRef(setAttributes.element)!.split(".");
         const oldValContent = Array.from(val.childNodes).find(
           (node) => node.nodeType === Node.TEXT_NODE,
         )!;
-        const newValContent = update.element.ownerDocument.createTextNode(
-          `${path}.${update.attributes.name}`,
+        const newValContent = setAttributes.element.ownerDocument.createTextNode(
+          `${path}.${setAttributes.attributes!.name}`,
         ) as Text;
 
         return [
@@ -55,28 +53,28 @@ export function updateSampledValueControl(
         ];
       });
 
-    const smvUpdate: Update[] = [];
-    const sMV = controlBlockGseOrSmv(update.element);
+    const smvUpdate: SetAttributes[] = [];
+    const sMV = controlBlockGseOrSmv(setAttributes.element);
     if (sMV) {
       smvUpdate.push({
         element: sMV,
-        attributes: { cbName: update.attributes.name },
+        attributes: { cbName: setAttributes.attributes.name },
       });
     }
 
     updates.push(...extRefUpdates, ...supervisionUpdates, ...smvUpdate);
   }
 
-  if (update.attributes.datSet) {
-    const updateDataSet = updateDatSet(update);
+  if (setAttributes.attributes!.datSet) {
+    const updateDataSet = updateDatSet(setAttributes);
 
     if (updateDataSet) updates.push(updateDataSet);
     // remove datSet from the update to avoid schema invalidity
-    else delete update.attributes.datSet;
+    else delete setAttributes.attributes!.datSet;
 
     // +10000 for update
-    update.attributes.confRev = updatedConfRev(update.element);
+    setAttributes.attributes!.confRev = updatedConfRev(setAttributes.element);
   }
 
-  return [update, ...updates];
+  return [setAttributes, ...updates];
 }

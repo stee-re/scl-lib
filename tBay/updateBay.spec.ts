@@ -1,7 +1,9 @@
 import { expect } from "chai";
+
+import { isSetAttributes } from "@openscd/oscd-api/utils.js";
+
 import { findElement } from "../foundation/helpers.test.js";
 
-import { Update, isUpdate } from "../foundation/utils.js";
 import { substation } from "../tSubstation/substation.testfiles.js";
 import { updateBay } from "./updateBay.js";
 
@@ -87,18 +89,18 @@ describe("update Bay element", () => {
       });
 
       expect(edits.length).to.equal(6);
-      expect(edits[0]).to.satisfy(isUpdate);
-      expect((edits[0] as Update).element).to.equal(aa1e1q01);
+      expect(edits[0]).to.satisfy(isSetAttributes);
+      expect(edits[0].element).to.equal(aa1e1q01);
 
       expect(
         edits
-          .filter(isUpdate)
-          .find(({ attributes: { pathName } }) => pathName === "AA1/E1/Q03/L1"),
+          .filter(isSetAttributes)
+          .find(({ attributes }) => attributes?.pathName === "AA1/E1/Q03/L1"),
       ).to.exist;
       expect(
         edits
-          .filter(isUpdate)
-          .find(({ attributes: { pathName } }) => pathName === "AA1/E1/Q03/L2"),
+          .filter(isSetAttributes)
+          .find(({ attributes }) => attributes?.pathName === "AA1/E1/Q03/L2"),
       ).to.exist;
     });
 
@@ -109,23 +111,23 @@ describe("update Bay element", () => {
       });
 
       expect(edits.length).to.equal(6);
-      expect(edits[0]).to.satisfy(isUpdate);
-      expect((edits[0] as Update).element).to.equal(aa1e1q01);
+      expect(edits[0]).to.satisfy(isSetAttributes);
+      expect(edits[0].element).to.equal(aa1e1q01);
 
       expect(
         edits
-          .filter(isUpdate)
+          .filter(isSetAttributes)
           .filter(
-            ({ attributes: { connectivityNode, bayName } }) =>
-              connectivityNode === "AA1/E1/Q03/L1" && bayName === "Q03",
+            ({ attributes }) =>
+              attributes?.connectivityNode === "AA1/E1/Q03/L1" && attributes?.bayName === "Q03",
           ),
       ).to.have.lengthOf(2);
       expect(
         edits
-          .filter(isUpdate)
+          .filter(isSetAttributes)
           .find(
-            ({ attributes: { connectivityNode, bayName } }) =>
-              connectivityNode === "AA1/E1/Q03/L2" && bayName === "Q03",
+            ({ attributes }) =>
+              attributes?.connectivityNode === "AA1/E1/Q03/L2" && attributes?.bayName === "Q03",
           ),
       ).to.exist;
     });
@@ -138,11 +140,11 @@ describe("update Bay element", () => {
 
       expect(
         edits
-          .filter(isUpdate)
+          .filter(isSetAttributes)
           .find(
-            ({ element, attributes: { connectivityNode, bayName } }) =>
-              connectivityNode === "AA1/E1/BB2/L1" &&
-              bayName === "BB2" &&
+            ({ element, attributes }) =>
+              attributes?.connectivityNode === "AA1/E1/BB2/L1" &&
+              attributes?.bayName === "BB2" &&
               element.tagName === "NeutralPoint",
           ),
       ).to.exist;
@@ -156,16 +158,17 @@ describe("update Bay element", () => {
       });
 
       expect(edits.length).to.equal(5);
-      expect(edits[1].attributes.source).to.equal(
+      // cSpell:ignore CSWI
+      expect(edits[1].attributes!.source).to.equal(
         "AA3/J1/Q02/QA2/CBR/CSWI1/OpCls.general",
       );
-      expect(edits[2].attributes.source).to.equal(
+      expect(edits[2].attributes!.source).to.equal(
         "AA3/J1/Q02/QA2/CBR/CSWI1/OpCls.q",
       );
-      expect(edits[3].attributes.source).to.equal(
+      expect(edits[3].attributes!.source).to.equal(
         "AA3/J1/Q02/QA2/CBR/CSWI1/OpOpn.general",
       );
-      expect(edits[4].attributes.source).to.equal(
+      expect(edits[4].attributes!.source).to.equal(
         "AA3/J1/Q02/QA2/CBR/CSWI1/OpOpn.q",
       );
     });

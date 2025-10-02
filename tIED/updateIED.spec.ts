@@ -1,15 +1,16 @@
 import { expect } from "chai";
 
-import { handleEdit } from "@openscd/open-scd-core";
+import { EditV2 } from "@openscd/oscd-api";
+import { isSetAttributes } from "@openscd/oscd-api/utils.js";
 
-import { Edit, isUpdate } from "../foundation/utils.js";
+import { handleEdit } from "../foundation/helpers.test.js";
 
 import { scl } from "./updateIED.testfile.js";
 
 import { updateIED } from "./updateIED.js";
 
-function numberUpdates(edits: Edit[], tag: string): number {
-  return edits.filter((edit) => isUpdate(edit) && edit.element.tagName === tag)
+function numberUpdates(edits: EditV2[], tag: string): number {
+  return edits.filter((edit) => isSetAttributes(edit) && edit.element.tagName === tag)
     .length;
 }
 

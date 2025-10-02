@@ -1,9 +1,7 @@
 import { expect } from "chai";
 
-import { Insert } from "@openscd/oscd-api";
-import { isInsert } from "@openscd/oscd-api/utils.js";
-
-import { Update, isUpdate } from "../foundation/utils.js";
+import { Insert, SetAttributes } from "@openscd/oscd-api";
+import { isInsert, isSetAttributes } from "@openscd/oscd-api/utils.js";
 
 import { subscriptionEd2, subscriptionEd1 } from "./subscribe.testfiles.js";
 import { subscribe } from "./subscribe.js";
@@ -81,9 +79,9 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
 
       const edits = subscribe([{ sink, source: { fcda, controlBlock } }]);
       expect(edits.length).to.equal(1);
-      expect(edits[0]).to.satisfies(isUpdate);
-      expect((edits[0] as Update).element).to.equal(sink);
-      expect((edits[0] as Update).attributes).to.deep.equal({
+      expect(edits[0]).to.satisfies(isSetAttributes);
+      expect((edits[0] as SetAttributes).element).to.equal(sink);
+      expect((edits[0] as SetAttributes).attributes).to.deep.equal({
         iedName: "Publisher",
         ldInst: "QB1_Disconnector",
         prefix: "",
@@ -262,9 +260,9 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
 
         const edits = subscribe([{ sink, source: { fcda, controlBlock } }]);
         expect(edits.length).to.equal(1);
-        expect(edits[0]).to.satisfies(isUpdate);
-        expect((edits[0] as Update).element).to.equal(sink);
-        expect((edits[0] as Update).attributes).to.deep.equal({
+        expect(edits[0]).to.satisfies(isSetAttributes);
+        expect((edits[0] as SetAttributes).element).to.equal(sink);
+        expect((edits[0] as SetAttributes).attributes).to.deep.equal({
           iedName: "Publisher",
           ldInst: "QB1_Disconnector",
           prefix: "",
@@ -290,9 +288,9 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
 
         const edits = subscribe([{ sink, source: { fcda, controlBlock } }]);
         expect(edits.length).to.equal(1);
-        expect(edits[0]).to.satisfies(isUpdate);
-        expect((edits[0] as Update).element).to.equal(sink);
-        expect((edits[0] as Update).attributes).to.deep.equal({
+        expect(edits[0]).to.satisfies(isSetAttributes);
+        expect((edits[0] as SetAttributes).element).to.equal(sink);
+        expect((edits[0] as SetAttributes).attributes).to.deep.equal({
           iedName: "Publisher",
           ldInst: "QB1_Disconnector",
           prefix: "",
@@ -431,8 +429,8 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
         const edits = subscribe([extRef1, extRef2, extRef3, extRef4]);
         expect(edits.length).to.equal(5);
         expect(edits[0]).to.satisfies(isInsert);
-        expect(edits[1]).to.satisfies(isUpdate);
-        expect((edits[1] as Update).attributes).to.deep.equal({
+        expect(edits[1]).to.satisfies(isSetAttributes);
+        expect((edits[1] as SetAttributes).attributes).to.deep.equal({
           iedName: "Publisher",
           ldInst: "SampledValue",
           prefix: "L1",
@@ -447,7 +445,7 @@ describe("Function to connect source data to sink elements (subscribe)", () => {
           srcCBName: "someSmv",
           serviceType: "SMV",
         });
-        expect(edits[2]).to.satisfies(isUpdate);
+        expect(edits[2]).to.satisfies(isSetAttributes);
         expect(edits[3]).to.satisfies(isInsert);
         expect(edits[4]).to.satisfies(isInsert);
       });

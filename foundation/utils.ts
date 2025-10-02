@@ -1,4 +1,3 @@
-import { Insert, Remove } from "@openscd/oscd-api";
 /** User selection of a data structure
  * @example
  * user selects data object `Beh` to be enum `on` and `test`
@@ -15,20 +14,6 @@ import { Insert, Remove } from "@openscd/oscd-api";
 export type TreeSelection = {
   [name: string]: TreeSelection;
 };
-
-/** Intent to set or remove (if null) attributes on element */
-export type Update = {
-  element: Element;
-  attributes: Partial<Record<string, string | null>>;
-};
-
-/** Represents the user's intent to change an XMLDocument */
-export type Edit = Insert | Update | Remove | Edit[];
-
-export function isUpdate(edit: Edit): edit is Update {
-  return (edit as Update).element !== undefined;
-}
-
 
 /** Utility function to create element with `tagName` and its`attributes` */
 export function createElement(

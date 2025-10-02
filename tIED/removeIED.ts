@@ -1,10 +1,8 @@
-import { Remove } from "@openscd/oscd-api";
+import { Remove, SetAttributes } from "@openscd/oscd-api";
 
 import { isPublic } from "../tBaseElement/isPublic.js";
 import { unsubscribe } from "../tExtRef/unsubscribe.js";
 import { removeSubscriptionSupervision } from "../tLN/removeSubscriptionSupervision.js";
-
-import type { Update } from "../foundation/utils.js";
 
 const elementsToRemove = ["Association", "ClientLN", "ConnectedAP", "KDC"];
 
@@ -34,7 +32,7 @@ function removeWithIedName(ied: Element, iedName: string): Remove[] {
 function removeIedSubscriptionsAndSupervisions(
   ied: Element,
   iedName: string,
-): (Update | Remove)[] {
+): (SetAttributes | Remove)[] {
   const extRefs = Array.from(ied.ownerDocument.querySelectorAll(":root > IED"))
     .filter((ied) => ied.getAttribute("name") !== iedName)
     .flatMap((ied) =>
@@ -52,7 +50,7 @@ function removeIedSubscriptionsAndSupervisions(
   return [...extRefRemovals, ...supervisionRemovals];
 }
 
-function updateIedNameToNone(ied: Element, iedName: string): Update[] {
+function updateIedNameToNone(ied: Element, iedName: string): SetAttributes[] {
   const selector = elementsToReplaceWithNone
     .map((iedNameElement) => `${iedNameElement}[iedName="${iedName}"]`)
     .join(",");
@@ -76,7 +74,7 @@ function updateIedNameToNone(ied: Element, iedName: string): Update[] {
  * @param remove - IED element as a Remove edit
  * @returns - Set of additional edits to relevant SCL elements
  */
-export function removeIED(remove: Remove): (Update | Remove)[] {
+export function removeIED(remove: Remove): (SetAttributes | Remove)[] {
   if (
     remove.node.nodeType !== Node.ELEMENT_NODE ||
     remove.node.nodeName !== "IED" ||

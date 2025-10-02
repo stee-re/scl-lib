@@ -1,6 +1,6 @@
-import { Insert } from "@openscd/oscd-api";
+import { Insert, SetAttributes } from "@openscd/oscd-api";
 
-import { Update, createElement } from "../foundation/utils.js";
+import { createElement } from "../foundation/utils.js";
 import { getReference } from "../tBaseElement/getReference.js";
 import { insertSubscriptionSupervisions } from "../tLN/supervision/insertSubscriptionSupervisions.js";
 
@@ -119,7 +119,7 @@ function getDataAttributes(fcda: Element): {
 function createSubscribeEdit(
   connection: Connection,
   parent: Element,
-): Update | Insert | null {
+): SetAttributes | Insert | null {
   const doc = connection.sink.ownerDocument;
   const fcda = connection.source.fcda;
   const controlBlock = connection.source.controlBlock;
@@ -157,7 +157,7 @@ function createSubscribeEdit(
   return { parent, node: extRef, reference };
 }
 
-function createSubscribeEdits(connections: Connection[]): (Insert | Update)[] {
+function createSubscribeEdits(connections: Connection[]): (Insert | SetAttributes)[] {
   const inputEdits: Insert[] = [];
 
   const extRefEdits = connections
@@ -193,7 +193,7 @@ function createSubscribeEdits(connections: Connection[]): (Insert | Update)[] {
 
       return createSubscribeEdit(option!, parent);
     })
-    .filter((edit) => edit) as (Insert | Update)[];
+    .filter((edit) => edit) as (Insert | SetAttributes)[];
 
   return [...inputEdits, ...extRefEdits];
 }
@@ -264,7 +264,7 @@ export function subscribe(
     ignoreSupervision: false,
     checkOnlyBType: false,
   },
-): (Insert | Update)[] {
+): (Insert | SetAttributes)[] {
   const connections = Array.isArray(connectionOrConnections)
     ? connectionOrConnections
     : [connectionOrConnections];

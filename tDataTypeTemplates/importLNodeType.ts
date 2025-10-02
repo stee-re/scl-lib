@@ -1,6 +1,6 @@
-import { Insert } from "@openscd/oscd-api";
+import { EditV2, Insert } from "@openscd/oscd-api";
 
-import { Edit, createElement } from "../foundation/utils.js";
+import { createElement } from "../foundation/utils.js";
 
 import { getReference } from "../tBaseElement/getReference.js";
 import { isEqualNode } from "./foundation.js";
@@ -121,7 +121,7 @@ export function importLNodeType(
   lNodeType: Element,
   targetDoc: XMLDocument,
   option: ImportLNodeTypeOptions = {}
-): Edit[] {
+): EditV2[] {
   const doc = lNodeType.ownerDocument;
   const targetScl = targetDoc.querySelector("SCL");
 

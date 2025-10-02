@@ -1,26 +1,26 @@
-import { Update } from "../foundation/utils.js";
+import { SetAttributes } from "@openscd/oscd-api";
 
 import { findControlBlockSubscription } from "../tControl/findControlSubscription.js";
 import { updatedConfRev } from "../tControl/updateConfRev.js";
 
 /** Updates `ReportControl` attributes and cross-referenced elements
- * @param update - update edit on `ReportControl` attributes
+ * @param setAttributes - setAttributes edit on `ReportControl` attributes
  * @returns Completed update edit array */
-export function updateReportControl(update: Update): Update[] {
-  if (update.element.tagName !== "ReportControl") return [];
+export function updateReportControl(setAttributes: SetAttributes): SetAttributes[] {
+  if (setAttributes.element.tagName !== "ReportControl") return [];
 
-  const reportControl = update.element;
-  const attributes = update.attributes;
+  const reportControl = setAttributes.element;
+  const attributes = setAttributes.attributes;
 
   const confRev = updatedConfRev(reportControl); // +10000 for update
   const attrs = { ...attributes, confRev };
 
-  const ctrlBlockUpdates: Update[] = [
+  const ctrlBlockUpdates: SetAttributes[] = [
     { element: reportControl, attributes: attrs },
   ];
-  if (!attributes.name) return ctrlBlockUpdates;
+  if (!attributes?.name) return ctrlBlockUpdates;
 
-  const extRefUpdates: Update[] = findControlBlockSubscription(
+  const extRefUpdates: SetAttributes[] = findControlBlockSubscription(
     reportControl,
   ).map((extRef) => ({
     element: extRef,

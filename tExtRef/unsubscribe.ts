@@ -1,6 +1,4 @@
-import { Remove } from "@openscd/oscd-api";
-
-import { Update } from "../foundation/utils.js";
+import { Remove, SetAttributes } from "@openscd/oscd-api";
 
 import { removeInputs } from "../tInputs/removeInputs.js";
 import { removeSubscriptionSupervision } from "../tLN/removeSubscriptionSupervision.js";
@@ -34,13 +32,13 @@ export type UnsubscribeOptions = {
 export function unsubscribe(
   extRefs: Element[],
   options: UnsubscribeOptions = { ignoreSupervision: false },
-): (Update | Remove)[] {
-  const updateEdits: Update[] = [];
+): (SetAttributes | Remove)[] {
+  const SetAttributesEdits: SetAttributes[] = [];
   const removeEdits: Remove[] = [];
 
   extRefs.map((extRef) => {
     if (extRef.getAttribute("intAddr"))
-      updateEdits.push({
+      SetAttributesEdits.push({
         element: extRef,
         attributes: {
           iedName: null,
@@ -63,7 +61,7 @@ export function unsubscribe(
 
   return [
     ...removeInputs(removeEdits),
-    ...updateEdits,
+    ...SetAttributesEdits,
     ...(options.ignoreSupervision
       ? []
       : removeSubscriptionSupervision(extRefs)),

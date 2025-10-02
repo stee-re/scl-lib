@@ -14,7 +14,7 @@ There are various types of functions you can find in this library grouped into:
 
 - <u>edit checks</u>: Those function are triggered by the wish to edit a specific SCL element, e.g. `GSEControl`.
 
-  - The input is a delta to the actual SCL formulated as `Update`, `Insert` or `Remove`.
-  - The output is a corrected delta formulated as an array of `Update`, `Insert` or `Remove`. The difference between the input and output contains expertise related to IEC 61850-6.
+  - The input is a delta to the actual SCL formulated as `SetAttributes`, `Insert` or `Remove`.
+  - The output is a corrected delta formulated as an array of `SetAttributes`, `Insert` or `Remove`. The difference between the input and output contains expertise related to IEC 61850-6.
 
 - <u>generators</u>: Generator functions that allow to dynamically create unique value such as MAC-addresses, APPID and others

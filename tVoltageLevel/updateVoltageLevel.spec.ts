@@ -1,7 +1,9 @@
 import { expect } from "chai";
+
+import { isSetAttributes } from "@openscd/oscd-api/utils.js";
+
 import { findElement } from "../foundation/helpers.test.js";
 
-import { Update, isUpdate } from "../foundation/utils.js";
 import { substation } from "../tSubstation/substation.testfiles.js";
 import { updateVoltageLevel } from "./updateVoltageLevel.js";
 
@@ -89,41 +91,41 @@ describe("update VoltageLevel element", () => {
       });
 
       expect(edits.length).to.equal(16);
-      expect((edits[0] as Update).element).to.equal(aa1e1);
+      expect(edits[0].element).to.equal(aa1e1);
 
-      const updates = edits.filter(isUpdate);
+      const updates = edits.filter(isSetAttributes);
 
       expect(
         updates.find(
-          ({ attributes: { pathName } }) => pathName === "AA1/E2/BB1/L1",
+          ({ attributes }) => attributes?.pathName === "AA1/E2/BB1/L1",
         ),
       ).to.exist;
 
-      expect((edits[1] as Update).attributes).to.deep.equal({
+      expect(edits[1].attributes).to.deep.equal({
         pathName: "AA1/E2/BB1/L1",
       });
 
       expect(
         updates.find(
-          ({ attributes: { pathName } }) => pathName === "AA1/E2/Q01/L1",
+          ({ attributes }) => attributes?.pathName === "AA1/E2/Q01/L1",
         ),
       ).to.exist;
 
       expect(
         updates.find(
-          ({ attributes: { pathName } }) => pathName === "AA1/E2/Q01/L2",
+          ({ attributes }) => attributes?.pathName === "AA1/E2/Q01/L2",
         ),
       ).to.exist;
 
       expect(
         updates.find(
-          ({ attributes: { pathName } }) => pathName === "AA1/E2/Q02/L2",
+          ({ attributes }) => attributes?.pathName === "AA1/E2/Q02/L2",
         ),
       ).to.exist;
 
       expect(
         updates.find(
-          ({ attributes: { pathName } }) => pathName === "AA1/E2/Q02/L2",
+          ({ attributes }) => attributes?.pathName === "AA1/E2/Q02/L2",
         ),
       ).to.exist;
     });
@@ -136,12 +138,13 @@ describe("update VoltageLevel element", () => {
 
       expect(edits.length).to.equal(16);
 
-      const updates = edits.filter(isUpdate);
+      const updates = edits.filter(isSetAttributes);
 
       expect(
         updates.find(
-          ({ attributes: { connectivityNode, voltageLevelName } }) =>
-            voltageLevelName === "E2" && connectivityNode === "AA1/E2/BB1/L1",
+          ({ attributes }) =>
+            attributes?.["voltageLevelName"] === "E2" &&
+            attributes?.["connectivityNode"] === "AA1/E2/BB1/L1",
         ),
       ).to.exist;
 
@@ -149,18 +152,19 @@ describe("update VoltageLevel element", () => {
         updates.find(
           ({
             element: { tagName },
-            attributes: { connectivityNode, voltageLevelName },
+            attributes,
           }) =>
             tagName === "NeutralPoint" &&
-            voltageLevelName === "E2" &&
-            connectivityNode === "AA1/E2/BB1/L1",
+            attributes?.["voltageLevelName"] === "E2" &&
+            attributes?.["connectivityNode"] === "AA1/E2/BB1/L1",
         ),
       ).to.exist;
 
       expect(
         updates.filter(
-          ({ attributes: { connectivityNode, voltageLevelName } }) =>
-            voltageLevelName === "E2" && connectivityNode === "AA1/E2/Q01/L1",
+          ({ attributes }) =>
+            attributes?.["voltageLevelName"] === "E2" &&
+            attributes?.["connectivityNode"] === "AA1/E2/Q01/L1",
         ),
       ).to.have.lengthOf(2);
     });
@@ -172,16 +176,16 @@ describe("update VoltageLevel element", () => {
       });
 
       expect(edits.length).to.equal(5);
-      expect(edits[1].attributes.source).to.equal(
+      expect(edits[1].attributes?.source).to.equal(
         "AA3/F1/Q01/QA2/CBR/CSWI1/OpCls.general",
       );
-      expect(edits[2].attributes.source).to.equal(
+      expect(edits[2].attributes?.source).to.equal(
         "AA3/F1/Q01/QA2/CBR/CSWI1/OpCls.q",
       );
-      expect(edits[3].attributes.source).to.equal(
+      expect(edits[3].attributes?.source).to.equal(
         "AA3/F1/Q01/QA2/CBR/CSWI1/OpOpn.general",
       );
-      expect(edits[4].attributes.source).to.equal(
+      expect(edits[4].attributes?.source).to.equal(
         "AA3/F1/Q01/QA2/CBR/CSWI1/OpOpn.q",
       );
     });

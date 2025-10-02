@@ -1,4 +1,6 @@
-import { createElement, Edit, Update } from "../foundation/utils.js";
+import { EditV2, SetAttributes } from "@openscd/oscd-api";
+
+import { createElement } from "../foundation/utils.js";
 
 import { controlBlockObjRef } from "../tControl/controlBlockObjRef.js";
 
@@ -19,7 +21,7 @@ function updateIEDNameTextContent(
   ied: Element,
   oldIedName: string,
   newIedName: string,
-): Edit[] {
+): EditV2[] {
   return Array.from(ied.ownerDocument.getElementsByTagName("IEDName"))
     .filter(isPublic)
     .filter((iedName) => iedName.textContent === oldIedName)
@@ -80,8 +82,8 @@ function validSubscriptionSupervision(
       return !!otherIED.querySelector(
         `:scope > AccessPoint > Server > LDevice 
           ExtRef[iedName="${oldIedName}"][srcLDInst="${srcLDInst}"][srcCBName="${srcCB.getAttribute(
-            "name",
-          )}"]`,
+          "name",
+        )}"]`,
       );
     })
     .map((srcCB) => {
@@ -102,7 +104,7 @@ function updateSubscriptionSupervision(
   ied: Element,
   oldIedName: string,
   newIedName: string,
-): Edit[] {
+): EditV2[] {
   const vals = Array.from(
     ied.ownerDocument.querySelectorAll(":root > IED"),
   ).flatMap((otherIED) =>
@@ -126,7 +128,7 @@ function updateIedNameAttributes(
   ied: Element,
   oldIedName: string,
   newIedName: string,
-): Update[] {
+): SetAttributes[] {
   const selector = elementsWithIedNameAttribute
     .map((iedNameElement) => `${iedNameElement}[iedName="${oldIedName}"]`)
     .join(",");
@@ -205,7 +207,7 @@ function updateObjectReferences(
   oldIedName: string,
   newIedName: string,
   checkPermission = false,
-): Edit[] {
+): EditV2[] {
   const objRefCandidates = Array.from(
     ied.querySelectorAll("LN DAI > Val, LN0 DAI > Val"),
   ).filter((val) => {
@@ -256,22 +258,22 @@ function updateObjectReferences(
  * 2. Update all control block object references pointing to the IED
  * 3. Updates IEDName elements text content
  * ```
- * @param update - IED element and attributes to be changed in the IED element
+ * @param setAttributes - IED element and attributes to be changed in the IED element
  * @param checkPermission - Check permission before changing object references
  * (other than supervision node GoCBRef values).
  * @returns - Set of addition edits updating all references SCL elements
  */
-export function updateIED(update: Update, checkPermission = false): Edit[] {
-  if (update.element.tagName !== "IED") return [];
-  if (!update.attributes.name) return [update];
+export function updateIED(setAttributes: SetAttributes, checkPermission = false): EditV2[] {
+  if (setAttributes.element.tagName !== "IED") return [];
+  if (!setAttributes.attributes?.name) return [setAttributes];
 
-  const ied = update.element;
+  const ied = setAttributes.element;
   const oldIedName = ied.getAttribute("name");
-  const newIedName = update.attributes.name!;
+  const newIedName = setAttributes.attributes.name!;
   if (!oldIedName) return [];
 
   return [
-    update,
+    setAttributes,
     ...updateIedNameAttributes(ied, oldIedName, newIedName),
     ...updateSubscriptionSupervision(ied, oldIedName, newIedName),
     ...updateIEDNameTextContent(ied, oldIedName, newIedName),

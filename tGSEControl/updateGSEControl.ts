@@ -1,6 +1,4 @@
-import { Insert, Remove } from "@openscd/oscd-api";
-
-import { Update } from "../foundation/utils.js";
+import { Insert, Remove, SetAttributes } from "@openscd/oscd-api";
 
 import { controlBlockGseOrSmv } from "../tControl/controlBlockGseOrSmv.js";
 import { controlBlockObjRef } from "../tControl/controlBlockObjRef.js";
@@ -21,29 +19,29 @@ import { updateDatSet } from "../tControl/updateDatSet.js";
  * @param attributes -
  * @returns action array to update all `GSEControl` attributes
  */
-export function updateGSEControl(update: Update): (Update | Remove | Insert)[] {
-  if (update.element.tagName !== "GSEControl") return [];
+export function updateGSEControl(setAttributes: SetAttributes): (SetAttributes | Remove | Insert)[] {
+  if (setAttributes.element.tagName !== "GSEControl") return [];
 
-  const updates: (Update | Remove | Insert)[] = [];
-  if (update.attributes.name) {
-    const extRefUpdates: Update[] = findControlBlockSubscription(
-      update.element,
+  const updates: (SetAttributes | Remove | Insert)[] = [];
+  if (setAttributes.attributes!.name) {
+    const extRefUpdates: SetAttributes[] = findControlBlockSubscription(
+      setAttributes.element,
     ).map((extRef) => ({
       element: extRef,
-      attributes: { srcCBName: update.attributes.name },
+      attributes: { srcCBName: setAttributes.attributes!.name },
     }));
 
     const supervisionUpdates: (Remove | Insert)[] = Array.from(
-      update.element.ownerDocument.querySelectorAll("Val"),
+      setAttributes.element.ownerDocument.querySelectorAll('*[lnClass="LGOS"] Val'),
     )
-      .filter((val) => val.textContent === controlBlockObjRef(update.element))
+      .filter((val) => val.textContent === controlBlockObjRef(setAttributes.element))
       .flatMap((val) => {
-        const [path] = controlBlockObjRef(update.element)!.split(".");
+        const [path] = controlBlockObjRef(setAttributes.element)!.split(".");
         const oldValContent = Array.from(val.childNodes).find(
           (node) => node.nodeType === Node.TEXT_NODE,
         )!;
-        const newValContent = update.element.ownerDocument.createTextNode(
-          `${path}.${update.attributes.name}`,
+        const newValContent = setAttributes.element.ownerDocument.createTextNode(
+          `${path}.${setAttributes.attributes!.name}`,
         ) as Text;
 
         return [
@@ -52,28 +50,28 @@ export function updateGSEControl(update: Update): (Update | Remove | Insert)[] {
         ];
       });
 
-    const gseUpdate: Update[] = [];
-    const gSE = controlBlockGseOrSmv(update.element);
+    const gseUpdate: SetAttributes[] = [];
+    const gSE = controlBlockGseOrSmv(setAttributes.element);
     if (gSE) {
       gseUpdate.push({
         element: gSE,
-        attributes: { cbName: update.attributes.name },
+        attributes: { cbName: setAttributes.attributes!.name },
       });
     }
 
     updates.push(...extRefUpdates, ...supervisionUpdates, ...gseUpdate);
   }
 
-  if (update.attributes.datSet) {
-    const updateDataSet = updateDatSet(update);
+  if (setAttributes.attributes!.datSet) {
+    const updateDataSet = updateDatSet(setAttributes);
 
     if (updateDataSet) updates.push(updateDataSet);
     // remove datSet from the update to avoid schema invalidity
-    else delete update.attributes.datSet;
+    else delete setAttributes.attributes!.datSet;
 
     // +10000 for data set update
-    update.attributes.confRev = updatedConfRev(update.element);
+    setAttributes.attributes!.confRev = updatedConfRev(setAttributes.element);
   }
 
-  return [update, ...updates];
+  return [setAttributes, ...updates];
 }

@@ -1,6 +1,4 @@
-import { Remove } from "@openscd/oscd-api";
-
-import { Update } from "../foundation/utils.js";
+import { Remove, SetAttributes } from "@openscd/oscd-api";
 
 import { removeDataSet } from "../tDataSet/removeDataSet.js";
 import { unsubscribe } from "../tExtRef/unsubscribe.js";
@@ -21,7 +19,7 @@ import { findControlBlockSubscription } from "./findControlSubscription.js";
  * @param remove - Remove edit for the control block element
  * @returns Action array removing control block and its referenced data
  * */
-export function removeControlBlock(remove: Remove): (Remove | Update)[] {
+export function removeControlBlock(remove: Remove): (Remove | SetAttributes)[] {
   if (
     !["ReportControl", "GSEControl", "SampledValueControl"].includes(
       (remove.node as Element).tagName,
@@ -31,12 +29,12 @@ export function removeControlBlock(remove: Remove): (Remove | Update)[] {
 
   const controlBlock = remove.node as Element;
 
-  const ctrlBlockRemoveAction: (Remove | Update)[] = [{ node: controlBlock }];
+  const ctrlBlockRemoveAction: (Remove | SetAttributes)[] = [{ node: controlBlock }];
 
   const dataSet = controlBlock.parentElement?.querySelector(
     `DataSet[name="${controlBlock.getAttribute("datSet")}"]`,
   );
-  const dataSetRemove: (Remove | Update)[] = [];
+  const dataSetRemove: (Remove | SetAttributes)[] = [];
   if (dataSet && controlBlocks(dataSet).length > 1) {
     dataSetRemove.push(
       ...unsubscribe(findControlBlockSubscription(controlBlock)),

@@ -1,6 +1,7 @@
 import { expect } from "chai";
-import { isRemove } from "@openscd/oscd-api/utils.js";
-import { Update, isUpdate } from "../foundation/utils.js";
+
+import { SetAttributes } from "@openscd/oscd-api";
+import { isRemove, isSetAttributes } from "@openscd/oscd-api/utils.js";
 
 import { findElement } from "../foundation/helpers.test.js";
 
@@ -54,7 +55,7 @@ describe("Utility functions to remove FCDA element", () => {
     expect(edits.length).to.equal(4);
     expect(edits[1]).to.satisfies(isRemove);
     expect(edits[2]).to.satisfies(isRemove);
-    expect(edits[3]).to.satisfies(isUpdate);
+    expect(edits[3]).to.satisfies(isSetAttributes);
   });
 
   it("removes Ed2 subscriptions if any found", () => {
@@ -66,8 +67,8 @@ describe("Utility functions to remove FCDA element", () => {
     const edits = removeFCDA({ node: fcda });
     expect(edits.length).to.equal(2);
     expect(edits[0]).to.satisfies(isRemove);
-    expect(edits[1]).to.satisfies(isUpdate);
-    expect((edits[1] as Update).attributes).to.deep.equal({
+    expect(edits[1]).to.satisfies(isSetAttributes);
+    expect((edits[1] as SetAttributes).attributes).to.deep.equal({
       iedName: null,
       ldInst: null,
       prefix: null,

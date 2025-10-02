@@ -5,10 +5,9 @@ import {
   withSubscriptionSupervision,
 } from "./unsubscribe.testfiles.js";
 
-import { Remove } from "@openscd/oscd-api";
-import { isRemove } from "@openscd/oscd-api/utils.js";
+import { Remove, SetAttributes } from "@openscd/oscd-api";
+import { isRemove, isSetAttributes } from "@openscd/oscd-api/utils.js";
 
-import { Update, isUpdate } from "../foundation/utils.js";
 import { unsubscribe } from "./unsubscribe.js";
 import { findElement } from "../foundation/helpers.test.js";
 
@@ -50,12 +49,12 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     const edits = unsubscribe(extRefs);
 
     expect(edits.length).to.equal(3);
-    expect(edits[0]).to.satisfies(isUpdate);
-    expect((edits[0] as Update).element).to.equal(extRefs[0]);
-    expect(edits[1]).to.satisfies(isUpdate);
-    expect((edits[1] as Update).element).to.equal(extRefs[1]);
-    expect(edits[2]).to.satisfies(isUpdate);
-    expect((edits[2] as Update).element).to.equal(extRefs[2]);
+    expect(edits[0]).to.satisfies(isSetAttributes);
+    expect((edits[0] as SetAttributes).element).to.equal(extRefs[0]);
+    expect(edits[1]).to.satisfies(isSetAttributes);
+    expect((edits[1] as SetAttributes).element).to.equal(extRefs[1]);
+    expect(edits[2]).to.satisfies(isSetAttributes);
+    expect((edits[2] as SetAttributes).element).to.equal(extRefs[2]);
   });
 
   it("does not remove ICT defined Ed2 attributes", () => {
@@ -63,11 +62,11 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     const edits = unsubscribe([extRef]);
 
     expect(edits.length).to.equal(1);
-    expect(edits[0]).to.satisfies(isUpdate);
+    expect(edits[0]).to.satisfies(isSetAttributes);
 
-    const update = edits[0] as Update;
-    expect(update.attributes["intAddr"]).to.be.undefined;
-    expect(update.attributes).to.not.have.own.property("serviceType");
+    const setAttributes = edits[0] as SetAttributes;
+    expect(setAttributes.attributes!["intAddr"]).to.be.undefined;
+    expect(setAttributes.attributes).to.not.have.own.property("serviceType");
   });
 
   it("does not remove ICT defined Ed2.1 attributes", () => {
@@ -78,15 +77,15 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     const edits = unsubscribe([extRef]);
 
     expect(edits.length).to.equal(1);
-    expect(edits[0]).to.satisfies(isUpdate);
+    expect(edits[0]).to.satisfies(isSetAttributes);
 
-    const update = edits[0] as Update;
-    expect(update.attributes["intAddr"]).to.be.undefined;
+    const setAttributes = edits[0] as SetAttributes;
+    expect(setAttributes.attributes!["intAddr"]).to.be.undefined;
     // remove service type if pServT defined
-    expect(update.attributes["serviceType"]).to.be.null;
-    expect(update.attributes["pDo"]).to.be.undefined;
-    expect(update.attributes["pDA"]).to.be.undefined;
-    expect(update.attributes["pServT"]).to.be.undefined;
+    expect(setAttributes.attributes!["serviceType"]).to.be.null;
+    expect(setAttributes.attributes!["pDo"]).to.be.undefined;
+    expect(setAttributes.attributes!["pDA"]).to.be.undefined;
+    expect(setAttributes.attributes!["pServT"]).to.be.undefined;
   });
 
   it("per default remove subscription LGOS supervision as well", () => {
@@ -107,8 +106,8 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     expect((edits[0] as Remove).node).to.equal(extRefs[0]);
     expect(edits[1]).to.satisfies(isRemove);
     expect((edits[1] as Remove).node).to.equal(extRefs[1]);
-    expect(edits[2]).to.satisfies(isUpdate);
-    expect((edits[2] as Update).element).to.equal(extRefs[2]);
+    expect(edits[2]).to.satisfies(isSetAttributes);
+    expect((edits[2] as SetAttributes).element).to.equal(extRefs[2]);
     expect(edits[3]).to.satisfies(isRemove);
     expect((edits[3] as Remove).node).to.equal(val!.firstChild);
     expect(edits[4]).to.satisfies(isRemove);
@@ -127,8 +126,8 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     expect((edits[0] as Remove).node).to.equal(extRefs[0]);
     expect(edits[1]).to.satisfies(isRemove);
     expect((edits[1] as Remove).node).to.equal(extRefs[1]);
-    expect(edits[2]).to.satisfies(isUpdate);
-    expect((edits[2] as Update).element).to.equal(extRefs[2]);
+    expect(edits[2]).to.satisfies(isSetAttributes);
+    expect((edits[2] as SetAttributes).element).to.equal(extRefs[2]);
   });
 
   it("does not remove subscription supervision with remaining connections", () => {
@@ -200,8 +199,8 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     const edits = unsubscribe(extRefs, { ignoreSupervision: true });
 
     expect(edits.length).to.equal(1);
-    expect((edits[0] as Update).element).to.equal(extRefs[0]);
-    expect((edits[0] as Update).attributes.serviceType).to.be.null;
+    expect((edits[0] as SetAttributes).element).to.equal(extRefs[0]);
+    expect((edits[0] as SetAttributes).attributes!.serviceType).to.be.null;
   });
 
   it("without pServT, serviceType is not removed", () => {
@@ -212,8 +211,8 @@ describe("Function allowing to unsubscribe multiple external references", () => 
     const edits = unsubscribe([extRefs], { ignoreSupervision: true });
 
     expect(edits.length).to.equal(1);
-    expect((edits[0] as Update).element).to.equal(extRefs);
-    expect((edits[0] as Update).attributes).to.not.have.own.property(
+    expect((edits[0] as SetAttributes).element).to.equal(extRefs);
+    expect((edits[0] as SetAttributes).attributes).to.not.have.own.property(
       "serviceType",
     );
   });

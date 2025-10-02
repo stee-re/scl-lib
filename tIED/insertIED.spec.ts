@@ -1,8 +1,8 @@
 import { expect } from "chai";
 
-import { Update, handleEdit } from "@openscd/open-scd-core";
+import { Insert, SetAttributes } from "@openscd/oscd-api";
+import { handleEdit } from "../foundation/helpers.test.js";
 
-import { Insert } from "../foundation/utils";
 import { insertIed } from "./insertIED.js";
 
 function findEdit(
@@ -126,7 +126,7 @@ describe("Function to an importIED and its referenced elements", () => {
     ).querySelector("SCL")!;
 
     // try to import the same IED twice
-    for (let count = 2; count--; ) {
+    for (let count = 2; count--;) {
       const multipleIEDs = (
         await fetch("tIED/insertIED/multipleieds.scd")
           .then((response) => response.text())
@@ -353,7 +353,7 @@ describe("Function to an importIED and its referenced elements", () => {
       const importedIed = multipleIedDocument.querySelector(
         'IED[name="TestImportIED"]',
       )!;
-      const renameEdit: Update = {
+      const renameEdit: SetAttributes = {
         element: importedIed,
         attributes: { name: `TestImportIED_${count}` },
       };

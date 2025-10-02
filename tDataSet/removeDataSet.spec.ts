@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Remove, Update } from "../foundation/utils.js";
+import { Remove, SetAttributes } from "@openscd/oscd-api";
 
 import { findElement } from "../foundation/helpers.test.js";
 
@@ -38,7 +38,7 @@ describe("Utility function to remove DataSet element", () => {
     expect((edits[1] as Remove).node).to.equal(extRefs[0]);
     expect((edits[2] as Remove).node).to.equal(extRefs[1]);
     expect((edits[3] as Remove).node).to.equal(extRefs[3]);
-    expect((edits[4] as Update).element).to.equal(extRefs[2]);
+    expect((edits[4] as SetAttributes).element).to.equal(extRefs[2]);
   });
 
   it("including the subscriber supervision", () => {
@@ -47,15 +47,15 @@ describe("Utility function to remove DataSet element", () => {
   });
 
   it("including control Block updates", () => {
-    expect((edits[7] as Update).attributes).to.deep.equal({
+    expect((edits[7] as SetAttributes).attributes).to.deep.equal({
       datSet: null,
       confRev: "10340",
     });
-    expect((edits[8] as Update).attributes).to.deep.equal({
+    expect((edits[8] as SetAttributes).attributes).to.deep.equal({
       datSet: null,
       confRev: "10342",
     });
-    expect((edits[9] as Update).attributes).to.deep.equal({
+    expect((edits[9] as SetAttributes).attributes).to.deep.equal({
       datSet: null,
       confRev: "10344",
     });
