@@ -5,7 +5,10 @@ import { isRemove, isUpdate } from "@openscd/oscd-api/utils.js";
 
 import { handleEdit } from "../foundation/helpers.test.js";
 
-import { scl } from "./removeIED.testfile.js";
+import {
+  scl,
+  sclDuplicateLNodes,
+} from "./removeIED.testfile.js";
 
 import { removeIED } from "./removeIED.js";
 
@@ -125,5 +128,84 @@ describe("Function to an remove the IED and its referenced elements", () => {
     ).filter((iedName) => iedName.textContent?.startsWith("Publisher"));
     // 1 supervised control block is not subscribed so is not removed
     expect(after.length).to.equal(1);
+  });
+});
+
+describe("Duplicate LNode keys after removing IEDs", () => {
+  it("does not remove duplicate LNodes when removeLNodes is false", () => {
+    const sclDom = new DOMParser().parseFromString(
+      sclDuplicateLNodes,
+      "application/xml",
+    );
+    const iedA = sclDom.querySelector('IED[name="IED_A"]')!;
+    const iedB = sclDom.querySelector('IED[name="IED_B"]')!;
+
+    handleEdit(removeIED({ node: iedA }));
+    const edits = removeIED({ node: iedB }, { removeLNodes: false });
+
+    expect(numberUpdates(edits, "LNode")).to.equal(2);
+    expect(numberRemoves(edits, "LNode")).to.equal(0);
+  });
+
+  it("does not create duplicate LNode keys when removing both IEDs", () => {
+    const sclDom = new DOMParser().parseFromString(
+      sclDuplicateLNodes,
+      "application/xml",
+    );
+    const iedA = sclDom.querySelector('IED[name="IED_A"]')!;
+    const iedB = sclDom.querySelector('IED[name="IED_B"]')!;
+
+    handleEdit(removeIED({ node: iedA }));
+    handleEdit(removeIED({ node: iedB }));
+
+    const ce = sclDom.querySelector('ConductingEquipment[name="QA1"]')!;
+    const lNodes = Array.from(ce.querySelectorAll(":scope > LNode"));
+    const keys = lNodes.map(
+      (ln) =>
+        `${ln.getAttribute("ldInst")}|${ln.getAttribute(
+          "lnClass",
+        )}|${ln.getAttribute("lnInst")}|${ln.getAttribute(
+          "prefix",
+        )}|${ln.getAttribute("iedName")}`,
+    );
+    const uniqueKeys = new Set(keys);
+
+    expect(keys.length).to.equal(
+      uniqueKeys.size,
+      `Duplicate LNode keys found: ${keys
+        .filter((k, i) => keys.indexOf(k) !== i)
+        .join(", ")}`,
+    );
+  });
+
+  it("updates LNode to iedName None when no duplicate exists", () => {
+    const sclDom = new DOMParser().parseFromString(
+      sclDuplicateLNodes,
+      "application/xml",
+    );
+    const iedA = sclDom.querySelector('IED[name="IED_A"]')!;
+
+    const edits = removeIED({ node: iedA });
+    handleEdit(edits);
+
+    const ce = sclDom.querySelector('ConductingEquipment[name="QA1"]')!;
+    const noneLNodes = ce.querySelectorAll(':scope > LNode[iedName="None"]');
+    expect(noneLNodes.length).to.equal(2);
+  });
+
+  it("removes duplicate LNode instead of updating to None", () => {
+    const sclDom = new DOMParser().parseFromString(
+      sclDuplicateLNodes,
+      "application/xml",
+    );
+    const iedA = sclDom.querySelector('IED[name="IED_A"]')!;
+    const iedB = sclDom.querySelector('IED[name="IED_B"]')!;
+
+    handleEdit(removeIED({ node: iedA }));
+    handleEdit(removeIED({ node: iedB }));
+
+    const ce = sclDom.querySelector('ConductingEquipment[name="QA1"]')!;
+    const noneLNodes = ce.querySelectorAll(':scope > LNode[iedName="None"]');
+    expect(noneLNodes.length).to.equal(2);
   });
 });

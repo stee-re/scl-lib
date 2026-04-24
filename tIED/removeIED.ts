@@ -50,7 +50,18 @@ function removeIedSubscriptionsAndSupervisions(
   return [...extRefRemovals, ...supervisionRemovals];
 }
 
-function updateIedNameToNone(ied: Element, iedName: string): SetAttributes[] {
+function lNodeKey(element: Element): string {
+  const attr = (name: string) => element.getAttribute(name) ?? "";
+  return `${attr("lnInst")}|${attr("lnClass")}|${attr("ldInst")}|${attr(
+    "prefix",
+  )}`;
+}
+
+function updateIedNameToNone(
+  ied: Element,
+  iedName: string,
+  removeDuplicates: boolean,
+): (SetAttributes | Remove)[] {
   const selector = elementsToReplaceWithNone
     .map((iedNameElement) => `${iedNameElement}[iedName="${iedName}"]`)
     .join(",");
@@ -58,8 +69,25 @@ function updateIedNameToNone(ied: Element, iedName: string): SetAttributes[] {
   return Array.from(ied.ownerDocument.querySelectorAll(selector))
     .filter(isPublic)
     .map((element) => {
-      return { element, attributes: { iedName: "None" } };
+      if (removeDuplicates) {
+        const parent = element.parentElement;
+        if (parent) {
+          const key = lNodeKey(element);
+          const hasDuplicate = Array.from(
+            parent.querySelectorAll(':scope > LNode[iedName="None"]'),
+          ).some((sibling) => lNodeKey(sibling) === key);
+
+          if (hasDuplicate) return { node: element } as Remove;
+        }
+      }
+      return { element, attributes: { iedName: "None" } } as SetAttributes;
     });
+}
+
+/** Options for the {@link removeIED} function. */
+export interface RemoveIedOptions {
+  /** Whether to update or remove LNode references. Defaults to `true`. */
+  removeLNodes?: boolean;
 }
 
 /**
@@ -69,12 +97,16 @@ function updateIedNameToNone(ied: Element, iedName: string): SetAttributes[] {
  * 1. Remove all elements which should no longer exist including ClientLN,
  *    KDC, Association, ConnectedAP and IEDName
  * 2. Remove subscriptions and supervisions
- * 2. Update LNodes to an iedName of None
+ * 3. Update LNodes to an iedName of None (or remove duplicates)
  * ```
  * @param remove - IED element as a Remove edit
+ * @param options - Optional settings to control removal behavior
  * @returns - Set of additional edits to relevant SCL elements
  */
-export function removeIED(remove: Remove): (SetAttributes | Remove)[] {
+export function removeIED(
+  remove: Remove,
+  options: RemoveIedOptions = { removeLNodes: true },
+): (SetAttributes | Remove)[] {
   if (
     remove.node.nodeType !== Node.ELEMENT_NODE ||
     remove.node.nodeName !== "IED" ||
@@ -90,6 +122,6 @@ export function removeIED(remove: Remove): (SetAttributes | Remove)[] {
     ...removeIEDNameTextContent(ied, name),
     ...removeWithIedName(ied, name),
     ...removeIedSubscriptionsAndSupervisions(ied, name),
-    ...updateIedNameToNone(ied, name),
+    ...updateIedNameToNone(ied, name, options.removeLNodes !== false),
   ];
 }
